@@ -59,6 +59,7 @@
   import LoginForm from './LoginForm.vue';
 import Popup from './Popup.vue';
   import RegisterForm from './RegisterForm.vue';
+  import { loadStripe } from '@stripe/stripe-js';
 
   export default {
     components: {
@@ -111,11 +112,31 @@ import Popup from './Popup.vue';
               console.error('Errore durante la verifica dell\'email:', error);
             });
       },
-      handleDonation(){
+     async handleDonation(){
         // Logica per gestire l'invio della donazione
         console.log('Donazione inviata:', this.form);
-        // Puoi aggiungere qui la chiamata API per inviare i dati al server
-      },
+        if (!this.form.amount || this.form.amount < 1) {
+        alert('Inserisci un importo valido.');
+        return;
+      }
+
+      try {
+        // Creazione della sessione di pagamento
+        const stripe = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
+        const response = await axios.post('/create-checkout-session', {
+          amount: this.form.amount,
+        });
+
+        const sessionId = response.data.id;
+
+        // Reindirizza a Stripe Checkout
+        await stripe.redirectToCheckout({ sessionId: sessionId });
+      } catch (error) {
+        console.error('Errore durante la donazione:', error);
+        alert('Errore durante la donazione, riprova.');
+      }
+    },
+
       showRegisterForm() {
         // Logica per mostrare il modulo di registrazione
         console.log('Mostra il modulo di registrazione');
