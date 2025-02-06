@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\FarmersController;
-use Illuminate\Http\Request;
+
 
 
 
@@ -21,3 +22,5 @@ Route::post('/check-email', function (Illuminate\Http\Request $request) {
 
     return response()->json(['exists' => $emailExists]);
 });
+
+Route::post('/update-password', [PasswordController::class, 'updatePassword']);
