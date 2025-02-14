@@ -2,8 +2,8 @@
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8 my-12">
       <UserInfo :user="user" />
       <UpdateProfile :user="user" @update-profile="updateProfile" />
-      <UpdatePassword @update-password="updatePassword" />
-      <DeleteAccount @delete-account="deleteAccount" />
+      <UpdatePassword :user="user" @update-password="updatePassword" />
+      <DeleteAccount :user="user" @delete-account="deleteAccount" />
     </div>
   </template>
 

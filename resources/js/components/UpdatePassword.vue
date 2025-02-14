@@ -7,7 +7,7 @@
         >
           <span>Update Password</span>
           <svg
-            :class="{'transform rotate-180': isOpen}"
+            :class="{ 'transform rotate-180': isOpen }"
             class="h-5 w-5 transition-transform duration-200"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -27,7 +27,7 @@
         class="mt-4"
         style="overflow: hidden; transition: max-height 0.3s ease;"
       >
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="updatePassword">
           <div class="mt-4">
             <label for="currentPassword" class="block text-sm font-medium text-gray-700">
               Current Password
@@ -81,6 +81,8 @@
   </template>
 
   <script>
+  import axios from "axios";
+
   export default {
     data() {
       return {
@@ -98,20 +100,46 @@
       toggleAccordion() {
         this.isOpen = !this.isOpen;
       },
-      submitForm() {
+      async updatePassword() {
         this.errors = {};
         this.successMessage = "";
 
-        // mock
+        // Validazione client-side
+        if (!this.form.currentPassword) {
+          this.errors.currentPassword = "Current password is required.";
+        }
+        if (!this.form.newPassword) {
+          this.errors.newPassword = "New password is required.";
+        } else if (this.form.newPassword.length < 8) {
+          this.errors.newPassword = "New password must be at least 8 characters long.";
+        }
         if (this.form.newPassword !== this.form.confirmPassword) {
           this.errors.confirmPassword = "Passwords do not match.";
-        } else {
-          this.successMessage = "Password updated successfully!";
-          this.form = {
-            currentPassword: "",
-            newPassword: "",
-            confirmPassword: "",
-          };
+        }
+
+        // Se ci sono errori, interrompi la richiesta
+        if (Object.keys(this.errors).length > 0) return;
+
+        try {
+          const response = await axios.post("/api/update-password", {
+            old_password: this.form.currentPassword,
+            new_password: this.form.newPassword,
+          });
+
+          this.successMessage = response.data.message || "Password updated successfully!";
+          this.form = { currentPassword: "", newPassword: "", confirmPassword: "" };
+        } catch (error) {
+          if (error.response && error.response.data) {
+            if (error.response.status === 403) {
+              this.errors.currentPassword = "Current password is incorrect.";
+            } else if (error.response.status === 400) {
+              this.errors.newPassword = "Invalid password format.";
+            } else {
+              this.errors.general = "An error occurred. Please try again.";
+            }
+          } else {
+            this.errors.general = "Server error. Please try again later.";
+          }
         }
       },
     },
