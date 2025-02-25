@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#56ab2f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a8e063;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="100" cy="100" r="95" fill="url(#leafGradient)" stroke="#3e8e41" stroke-width="10" />
+    <path d="M100 30c-20 30-60 40-60 80 0 30 25 50 60 50s60-20 60-50c0-40-40-50-60-80z" fill="#fff" />
+    <path d="M100 100c-15-10-35-5-35 10 0 10 10 20 25 20s25-10 25-20c0-15-20-20-25-10z" fill="#3e8e41" />
+    <text x="50%" y="90%" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#3e8e41">Agropuro</text>
+  </g>
+</svg>
