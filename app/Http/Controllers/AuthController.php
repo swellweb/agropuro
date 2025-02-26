@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -14,17 +14,21 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:utenti,email', // Usa la tabella `utenti`
+            'email' => 'required|string|email|max:255|unique:users,email', // Usa la tabella `users`
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string', // Ruolo dell'utente
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
+         ]);
+         $role = \App\Models\Role::where('name', $request->role)->first();
+
+         if ($role) {
+            $user->roles()->syncWithoutDetaching($role->id); // Assegna il ruolo all'utente
+         }
+
 
         return response()->json(['message' => 'Registrazione completata!'], 201);
     }
@@ -37,9 +41,9 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
-            \Log::info('Autenticazione riuscita per user ID: ' . Auth::id());
+            Log::info('Autenticazione riuscita per user ID: ' . Auth::id());
             $request->session()->regenerate();
-            \Log::info('Sessione rigenerata. Autenticato: ' . (Auth::check() ? 'Sì' : 'No'));
+            Log::info('Sessione rigenerata. Autenticato: ' . (Auth::check() ? 'Sì' : 'No'));
 
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;

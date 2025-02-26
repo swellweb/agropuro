@@ -19,15 +19,14 @@ class FarmersController extends Controller
     {
         // Effettua una join tra la tabella users e farmers utilizzando il modello
         $farmers = User::where('role', 'farmer')
-            ->join('farmers', 'utenti.id', '=', 'farmers.user_id')
+            ->join('farmers', 'users.id', '=', 'farmers.user_id')
             ->select(
-                'utenti.id',
-                'utenti.name',
-                'utenti.email',
+                'users.id',
+                'users.name',
+                'users.email',
                 'farmers.latitude',
                 'farmers.longitude',
                 'farmers.farm_name',
-                'farmers.product'
             )
             ->inRandomOrder()
             ->limit(6)
@@ -48,10 +47,10 @@ class FarmersController extends Controller
     {
         // Effettua una join tra la tabella users e farmers utilizzando il modello
         $farmers = User::where('role', 'farmer')
-            ->join('farmers', 'utenti.id', '=', 'farmers.user_id')
+            ->join('farmers', 'users.id', '=', 'farmers.user_id')
             ->select(
-                'utenti.name',
-                'utenti.email',
+                'users.name',
+                'users.email',
                 'farmers.latitude',
                 'farmers.longitude',
                 'farmers.farm_name',

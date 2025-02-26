@@ -21,7 +21,7 @@
     <div class="profile">
         @auth
             <span class="text-white font-semibold">{{ Auth::user()->name }}</span>
-            <a href="{{ route('profile.edit') }}" class="ml-4 text-white font-semibold hover:underline">Profilo</a>
+            <a href="{{ route('dashboard') }}" class="ml-4 text-white font-semibold hover:underline">Profilo</a>
             <form method="POST" action="{{ route('logout') }}" class="inline ml-4">
                 @csrf
                 <button type="submit" class="text-white font-semibold hover:underline">Logout</button>

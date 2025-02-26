@@ -14,10 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Crea 10 utenti
-        User::factory()->count(10)->create();
+       // Crea i ruoli
+       $this->call(RoleSeeder::class);
 
-        // Crea 5 agricoltori
-        Farmer::factory()->count(8)->create();
+       // Crea 10 utenti generici (con ruoli 'user' o 'administrator')
+       \App\Models\User::factory()->count(10)->create();
+
+       // Crea 10 agricoltori (con ruolo 'farmer' e prodotti)
+       \App\Models\Farmer::factory()->count(10)->create();
     }
 }
