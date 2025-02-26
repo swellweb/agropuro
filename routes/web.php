@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:web')->group(function () {
+Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function (Request $request) {
-    return view('user.dashboard');
+        $showcase  = auth()->check() && (auth()->user()->hasRole('administrator') || auth()->user()->hasRole('farmer') );
+
+        return view('user.dashboard', compact('showcase'));
+
     })->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

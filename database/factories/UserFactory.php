@@ -2,28 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
-    protected $model = User::class;
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    public function definition()
     {
         static $firstUserCreated = false;
 
@@ -35,27 +20,25 @@ class UserFactory extends Factory
                 'email_verified_at' => now(),
                 'password' => Hash::make('Prova123$'), // Hash della password
                 'remember_token' => Str::random(10),
-                'role' => 'admin', // Ruolo admin
+                'subscription' => 'farm'
             ];
         }
-
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => Hash::make(env('DEFAULT_USER_PASSWORD', 'password')), // Usa variabile di ambiente
+            'password' => Hash::make('password'),
+            'subscription' => $this->faker->randomElement(['roots', 'supply', 'farm']),
             'remember_token' => Str::random(10),
-            'role' => $this->faker->randomElement(['user', 'farmer']),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function configure()
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->afterCreating(function (\App\Models\User $user) {
+            // Assegna un ruolo casuale se non specificato
+            $roles = ['user', 'administrator']; // Escludi 'farmer', gestito da FarmerFactory
+            $user->roles()->attach(\App\Models\Role::where('name', $this->faker->randomElement($roles))->first());
+        });
     }
 }

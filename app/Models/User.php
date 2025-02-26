@@ -13,9 +13,6 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    // Specifica la tabella `utenti`
-    protected $table = 'utenti';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +22,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
     ];
 
     /**
@@ -48,5 +44,21 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime'
         ];
+    }
+
+    // app/Models/User.php
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles->contains('name', $role);
+    }
+
+    public function farmer()
+    {
+        return $this->hasOne(Farmer::class);
     }
 }

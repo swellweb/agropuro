@@ -15,6 +15,6 @@ class FarmerSeeder extends Seeder
     public function run()
     {
         // Crea 5 record di esempio per Farmer utilizzando la factory
-        Farmer::factory()->count(8)->create();
+        Farmer::factory()->count(10)->create();
     }
 }
