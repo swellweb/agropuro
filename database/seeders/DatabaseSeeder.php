@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
        // Crea 10 utenti generici (con ruoli 'user' o 'administrator')
        \App\Models\User::factory()->count(10)->create();
-
+       \App\Models\Tag::factory()->count(20)->create(); // Crea 20 tag di base
        // Crea 10 agricoltori (con ruolo 'farmer' e prodotti)
        \App\Models\Farmer::factory()->count(10)->create();
     }

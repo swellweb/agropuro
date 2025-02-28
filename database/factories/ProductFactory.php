@@ -1,6 +1,9 @@
 <?php
 
 namespace Database\Factories;
+
+use App\Models\Product;
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -21,12 +24,19 @@ class ProductFactory extends Factory
             'prezzo' => $this->faker->randomFloat(2, 1, 100),
             'quantita_disponibile' => $this->faker->numberBetween(1, 100),
             'unita_misura' => $this->faker->randomElement(['kg', 'litri', 'pezzi']),
-            'immagine' => "default/". \Str::slug($tipo) . ".webp",
+           'immagine' => "default/" . \Str::slug($tipo) . ".webp", // Immagine default in webp
             'video' => null,
             'galleria' => null,
-            'tag' => json_encode($this->faker->words(3)),
             'stagionalita' => $this->faker->randomElement(['Primavera', 'Estate', 'Autunno', 'Inverno', 'Tutto l’anno']),
             'certificazioni' => $this->faker->randomElement(['Bio', 'DOP', 'IGP', null]),
         ];
+    }
+    public function configure()
+    {
+        return $this->afterCreating(function (Product $product) {
+            // Aggiungi fino a 5 tag casuali dalla tabella tags
+            $tags = Tag::factory()->count(5)->create()->pluck('id')->random(rand(1, 5))->all();
+            $product->tags()->attach($tags);
+        });
     }
 }
