@@ -61,4 +61,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Farmer::class);
     }
+
+    // Metodo per verificare se l'utente è un farmer attivo
+    public function isFarmer()
+    {
+        return $this->farmer !== null; // True se ha un record in farmers
+    }
 }

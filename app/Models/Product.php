@@ -10,7 +10,7 @@ class Product extends Model
 
     protected $fillable = [
         'farmer_id', 'nome', 'descrizione', 'tipo', 'prezzo', 'quantita_disponibile',
-        'unita_misura', 'immagine', 'video', 'galleria', 'tag', 'stagionalita', 'certificazioni',
+        'unita_misura', 'immagine', 'video', 'galleria', 'stagionalita', 'certificazioni',
     ];
 
     protected $casts = [
@@ -21,5 +21,10 @@ class Product extends Model
     public function farmer()
     {
         return $this->belongsTo(Farmer::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'product_tag');
     }
 }

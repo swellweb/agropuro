@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@stripe/stripe-js": "^4.9.0",
-        "alpine": "^0.2.1"
+        "alpine": "^0.2.1",
+        "lodash": "^4.17.21"
     }
 }
